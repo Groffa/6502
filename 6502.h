@@ -79,6 +79,9 @@ struct instruction_t
     u8 Bytes;           // Additional bytes to fetch
     u8 Cycles;
     InstructionFunc Func;
+
+    // Meta-information
+    char *OpCodeName;
 };
 
 #include "instructions.h"

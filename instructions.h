@@ -3,7 +3,7 @@
 #include <assert.h>
 #include "opcodes.h"
 
-#define INSTR__(OpCode, AdditionalBytes, Cycles, Func) {OpCode,AdditionalBytes,Cycles,Func}
+#define INSTR__(OpCode, AdditionalBytes, Cycles, Func) {OpCode,AdditionalBytes,Cycles,Func,#OpCode}
 #define INSTR_(OpCode, AdditionalBytes, Cycles, Func) INSTR__(OpCode,AdditionalBytes,Cycles,Func)
 #define INSTR(OpCode, AdditionalBytes, Cycles)  INSTR_(OpCode,AdditionalBytes,Cycles,OpCode##_func)
 #define IMPLIED(OpCode, Cycles)     INSTR(OpCode, 0, Cycles)
