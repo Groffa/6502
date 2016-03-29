@@ -8,7 +8,7 @@ INSTRUCT(BRK)
     SET_FLAG(Cpu->SR, StatusFlag_INTERRUPT);
 }
 
-INSTRUCT(ORA__X)
+INSTRUCT(ORA_X_ind)
 {
     // ORA (oper,X)
     // A OR M -> A

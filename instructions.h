@@ -31,7 +31,7 @@ PopStack(cpu_t *Cpu, ram_t *Ram)
 
 static instruction_t InstructionTable[] = {
 IMPLIED(BRK, 7),
-INDIRECT(ORA__X, 1, 6),
+INDIRECT(ORA_X_ind, 1, 6),
 IMPLIED(PHA, 3),
 };
 static instruction_t InvalidInstruction = {(opcode_e)0,0,0,0};
