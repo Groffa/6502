@@ -4,6 +4,7 @@
 
 typedef unsigned char u8;
 typedef unsigned short u16;
+typedef unsigned int uint;
 
 // Status register flags
 enum statusflag_e
@@ -57,6 +58,9 @@ struct cpu_t
     u8 Y;
     u8 SR;      // Status register
     u8 SP;      // Stack pointer
+
+    // Meta-information
+    uint CycleCount;        // How many cycles have we run for?
 };
 
 // 16-bit (65K memory)

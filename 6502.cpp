@@ -19,5 +19,7 @@ main(int argc, char *argv[])
     LoadProgram(&Ram, Program, ProgramCount);
     SingleStepProgram(&Cpu, &Ram);
 
+    printf("Program ran for %i cycles.\n", Cpu.CycleCount);
+
     return 0;
 }

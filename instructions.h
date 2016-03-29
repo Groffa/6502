@@ -80,7 +80,19 @@ SingleStepProgram(cpu_t *Cpu, ram_t *Ram)
         Data[i] = READ_BYTE(Cpu, Ram);
     }
 
-    (Instruction.Func)(Cpu, Ram, Data);
+    if (Instruction.Func) {
+        (Instruction.Func)(Cpu, Ram, Data);
+        // Update meta-information
+        Cpu->CycleCount += Instruction.Cycles;
+    } else {
+        printf("-- NOT IMPLEMENTED PC=%2X: %2X",
+            Cpu->PC - (Instruction.Bytes + 1),
+            (u8)OpCode);
+        for (u8 i=0; i < Instruction.Bytes; ++i) {
+            printf(" %2X", Data[i]);
+        }
+        printf("\n");
+    }
 }
 
 #define INSTRUCTIONS_H
