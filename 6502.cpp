@@ -29,13 +29,22 @@ LoadProgram(ram_t *Ram, const char *Filename)
 static void
 Monitor(cpu_t *Cpu, ram_t *Ram)
 {
-    const char *StatusFlags = "\nNOIBDIZC\n%s\n";
-    const char *Menu = "[s]ingle-step  [r]estart  [q]uit >";
+    const char *StatusFlags = "\nNOIBDIZC      A  X  Y  PC SP    Memory snapshot (%04x - %04x)\n%s      %-2x %-2x %-2x %-2x %-2x    ";
+    const char *Menu = "[s]ingle-step [r]estart [g]oto [+/-] PC [m]emory [q]uit >";
     bool Running = true;
+    u16 MemoryDumpStart = 0;
+    u8 MemoryDumpCount = 20;
     while (Running) {
         char Input[128] = {0};
-        printf(StatusFlags, GetStatusRegisters(Cpu->SR));
-        
+        printf(StatusFlags, MemoryDumpStart, MemoryDumpStart + MemoryDumpCount, GetStatusRegisters(Cpu->SR), Cpu->A, Cpu->X, Cpu->Y, Cpu->PC, Cpu->SP);
+        // Print memory footprint
+        for (u16 MemoryAddress = MemoryDumpStart;
+             MemoryAddress < MemoryDumpStart + MemoryDumpCount;
+             ++MemoryAddress)
+        {
+            printf("%2x ", Ram->Data[MemoryAddress]);
+        }
+        printf("\n");
         opcode_e OpCode = (opcode_e)Ram->Data[Cpu->PC];
         instruction_t Instruction = DecodeOpCode(OpCode);
         char *OpCodeName = "(not impl)";
@@ -61,6 +70,37 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
                     case 's':
                         SingleStepProgram(Cpu, Ram);
                         break;
+
+                    case 'g':
+                        {
+                            printf("Enter new PC: ");
+                            scanf("%d", &Cpu->PC);
+                            break;
+                        }
+
+                    case '+':
+                        Cpu->PC++;
+                        break;
+
+                    case '-':
+                        Cpu->PC--;
+                        break;
+
+                    case 'm':
+                        {
+                            for (u16 Address = MemoryDumpStart;
+                                 Address < MemoryDumpStart + 128;
+                                 )
+                            {
+                                printf("%4x  ", Address);
+                                for (u16 Offset = 0; Offset < 0xF; ++Offset) {
+                                    printf("%-2x ", Ram->Data[Address++]);
+                                }
+                                printf("\n");
+                            }
+                            break; 
+                        }
+
                 }
             }
         }
@@ -73,14 +113,15 @@ main(int argc, char *argv[])
     cpu_t Cpu = {0};
     ram_t Ram = {0};
 
-    /*
+    //*
     u8 Program[] = {
-        BRK, BRK, BRK
+        ASL_zpg, 0
     };
+    Ram.Data[0] = 0xAA;
     u8 ProgramCount = sizeof(Program) / sizeof(Program[0]);
-    LoadProgram(&Ram, Program, ProgramCount);
-    */
-    LoadProgram(&Ram, "rom/atari2600/Vid_olym.bin");
+    LoadProgram(&Ram, Program, ProgramCount, 0x10);
+    //*/
+    //LoadProgram(&Ram, "rom/atari2600/Vid_olym.bin");
     // SingleStepProgram(&Cpu, &Ram);
     Monitor(&Cpu, &Ram);
 
