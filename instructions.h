@@ -32,6 +32,7 @@ static instruction_t InstructionTable[] = {
     OPCODE(ORA_X_ind, 1, 6),
     OPCODE(ORA_zpg, 1, 3),
     OPCODE(ASL_zpg, 1, 5),
+    OPCODE(PHP, 0, 3),
     OPCODE(PHA, 0, 3),
 };
 

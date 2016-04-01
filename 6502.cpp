@@ -115,7 +115,7 @@ main(int argc, char *argv[])
 
     //*
     u8 Program[] = {
-        ASL_zpg, 0
+        ASL_zpg, 0, PHP
     };
     Ram.Data[0] = 0xAA;
     u8 ProgramCount = sizeof(Program) / sizeof(Program[0]);

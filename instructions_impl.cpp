@@ -64,9 +64,13 @@ IMPLEMENT(ASL_zpg)
     }
 }
 
+IMPLEMENT(PHP)
+{
+    PushStack(Cpu, Ram, Cpu->SR);
+}
+
 IMPLEMENT(PHA)
 {
-    // Push accumulator on stack
     PushStack(Cpu, Ram, Cpu->A);
 }
 

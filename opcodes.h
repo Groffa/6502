@@ -8,7 +8,7 @@ enum opcode_e
     ORA_X_ind,          // ORA (zeropage, X)
     ORA_zpg = 0x5,      // ORA zeropage
     ASL_zpg,            // ASL zeropage
-    PHP = 0x8,          // PHP zeropage
+    PHP = 0x8,          // PHP
     ORA_im,             // ORA immediate
     ASL,                // ASL accumulator
     ORA_abs = 0xD,      // ORA absolute
