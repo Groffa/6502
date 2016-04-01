@@ -60,9 +60,6 @@ DecodeOpCode(opcode_e OpCode)
 void
 LoadProgram(ram_t *Ram, u8 *Program, u16 ProgramSize, u16 Base = 0x0)
 {
-    assert(ProgramSize <= RAM_SIZE);
-    assert(Base >= 0 && Base <= RAM_SIZE);
-
     for (u16 i=0; i < ProgramSize; ++i) {
         u16 Address = Base + i;
         Ram->Data[Address] = *(Program + i);
