@@ -6,8 +6,8 @@ enum opcode_e
 {
     BRK = 0x0,
     ORA_X_ind,          // ORA (zeropage, X)
-    ORA_zp = 0x5,       // ORA zeropage
-    ASL_zp,             // ASL zeropage
+    ORA_zpg = 0x5,      // ORA zeropage
+    ASL_zpg,            // ASL zeropage
     PHP = 0x8,          // PHP zeropage
     ORA_im,             // ORA immediate
     ASL,                // ASL accumulator
