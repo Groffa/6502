@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# On Haiku, uses the old GCC 2 compiler
+gcc 6502.cpp -o 6502_debug -Werror
+
+# For GCC4 builds:
+# gcc-x86 6502.cpp -o 6502_debug -Werror
