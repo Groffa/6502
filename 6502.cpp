@@ -29,38 +29,41 @@ LoadProgram(ram_t *Ram, const char *Filename)
 static void
 Monitor(cpu_t *Cpu, ram_t *Ram)
 {
-    const char *StatusFlags = "NOIBDIZC\n%s\n";
+    const char *StatusFlags = "\nNOIBDIZC\n%s\n";
     const char *Menu = "[s]ingle-step  [r]estart  [q]uit >";
     bool Running = true;
     while (Running) {
-        char Input = 0;
-        while (true) {
-            printf(StatusFlags, GetStatusRegisters(Cpu->SR));
-            
-            opcode_e OpCode = (opcode_e)Ram->Data[Cpu->PC];
-            instruction_t Instruction = DecodeOpCode(OpCode);
-            printf("%2X: %9s (%2x) ", Cpu->PC, Instruction.OpCodeName, OpCode);
-            
+        char Input[128] = {0};
+        printf(StatusFlags, GetStatusRegisters(Cpu->SR));
+        
+        opcode_e OpCode = (opcode_e)Ram->Data[Cpu->PC];
+        instruction_t Instruction = DecodeOpCode(OpCode);
+        char *OpCodeName = "(not impl)";
+        if (Instruction.Func) {
+            OpCodeName = Instruction.OpCodeName;
+        }
+        printf("%2X: %9s (%2x) ", Cpu->PC, OpCodeName, OpCode);
+        
+        printf(Menu);
+        scanf("%127s", Input);
+        
+        if (Input) {
+            for (char *CurrentInput = Input; *CurrentInput; ++CurrentInput) {
+                switch (*CurrentInput) {
+                    case 'r':
+                        memset(Cpu, 0, sizeof(cpu_t));
+                        break;
 
-            printf(Menu);
-            if (scanf("%c", &Input) > 0) {
-                break;
+                    case 'q':
+                        Running = false;
+                        break;
+
+                    case 's':
+                        SingleStepProgram(Cpu, Ram);
+                        break;
+                }
             }
         }
-        switch (Input) {
-            case 'r':
-                memset(Cpu, 0, sizeof(cpu_t));
-                break;
-
-            case 'q':
-                Running = false;
-                break;
-
-            case 's':
-                SingleStepProgram(Cpu, Ram);
-                break;
-        }
-        printf("\n");
     }
 }
 
