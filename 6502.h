@@ -71,7 +71,7 @@ struct ram_t
 
 typedef void (*InstructionFunc)(cpu_t *Cpu, ram_t *Ram, u8 *Data); 
 
-enum opcode_e;
+#include "opcodes.h"
 
 struct instruction_t
 {
@@ -81,7 +81,7 @@ struct instruction_t
     InstructionFunc Func;
 
     // Meta-information
-    char *OpCodeName;
+    char OpCodeName[16];
 };
 
 #include "instructions.h"

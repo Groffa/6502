@@ -71,9 +71,9 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
         printf("\n");
         opcode_e OpCode = (opcode_e)Ram->Data[Cpu->PC];
         instruction_t Instruction = DecodeOpCode(OpCode);
-        char *OpCodeName = "(not impl)";
+        char OpCodeName[32] = "(not impl)";
         if (Instruction.Func) {
-            OpCodeName = Instruction.OpCodeName;
+            strncpy(OpCodeName, Instruction.OpCodeName, sizeof(OpCodeName));
         }
         //printf("%2X: %9s (%2x) ", Cpu->PC, OpCodeName, OpCode);
         printf("%s(%02x)", OpCodeName, OpCode);
