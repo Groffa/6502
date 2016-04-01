@@ -1,9 +1,5 @@
 #ifndef OPCODES_H
 
-#define xNOOP__(x) NOOP_##x
-#define xNOOP_(x) xNOOP__(x)
-#define NOOP xNOOP_(__COUNTER__)
-
 // Resource:
 // http://e-tradition.net/bytes/6502/6502_instruction_set.html
 enum opcode_e

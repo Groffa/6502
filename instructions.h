@@ -34,7 +34,6 @@ IMPLIED(BRK, 7),
 INDIRECT(ORA_X_ind, 1, 6),
 IMPLIED(PHA, 3),
 };
-static instruction_t InvalidInstruction = {(opcode_e)0,0,0,0};
 
 #define INSTRUCTION_COUNT   (sizeof(InstructionTable)/sizeof(InstructionTable[0]))
 
@@ -50,6 +49,7 @@ DecodeOpCode(opcode_e OpCode)
             return InstructionTable[i];
         }
     }
+    instruction_t InvalidInstruction = { (opcode_e)0, 0, 0, 0 };
     return InvalidInstruction;
 }
 
