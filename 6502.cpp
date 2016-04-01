@@ -27,10 +27,34 @@ LoadProgram(ram_t *Ram, const char *Filename)
 }
 
 static void
+MemoryDump(ram_t *Ram, u16 StartAddress, u16 Length, u16 ColumnWidth, u16 MarkAddress = 0)
+{
+    for (u16 Address = StartAddress; 
+        Address < StartAddress + Length;
+        )
+    {
+        printf("%4x  ", Address);
+        for (u16 Offset = 0; Offset < ColumnWidth; ++Offset) {
+            bool MarkThisOne = (MarkAddress > 0 && MarkAddress == Address);
+            if (MarkThisOne) {
+                printf("[");
+            }
+            printf("%-2x", Ram->Data[Address++]);
+            if (MarkThisOne) {
+                printf("]");
+            } else {
+                printf("  ");
+            }
+        }
+        printf("\n");
+    }
+}
+
+static void
 Monitor(cpu_t *Cpu, ram_t *Ram)
 {
     const char *StatusFlags = "\nNOIBDIZC      A  X  Y  PC SP    Memory snapshot (%04x - %04x)\n%s      %-2x %-2x %-2x %-2x %-2x    ";
-    const char *Menu = "[s]ingle-step [r]estart [g]oto [+/-] PC [m]emory [q]uit >";
+    const char *Menu = "[s]ingle-step [r]estart [g]oto [+/-] PC [m]emory s[t]ack [q]uit >";
     bool Running = true;
     u16 MemoryDumpStart = 0;
     u8 MemoryDumpCount = 20;
@@ -71,6 +95,10 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
                         SingleStepProgram(Cpu, Ram);
                         break;
 
+                    case 't':
+                        MemoryDump(Ram, STACK_ADDR(0), 0xFF, 0xF, STACK_ADDR(Cpu->SP));
+                        break;
+
                     case 'g':
                         {
                             printf("Enter new PC: ");
@@ -87,19 +115,8 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
                         break;
 
                     case 'm':
-                        {
-                            for (u16 Address = MemoryDumpStart;
-                                 Address < MemoryDumpStart + 128;
-                                 )
-                            {
-                                printf("%4x  ", Address);
-                                for (u16 Offset = 0; Offset < 0xF; ++Offset) {
-                                    printf("%-2x ", Ram->Data[Address++]);
-                                }
-                                printf("\n");
-                            }
-                            break; 
-                        }
+                        MemoryDump(Ram, MemoryDumpStart, 128, 16, MemoryDumpStart);
+                        break;
 
                 }
             }
