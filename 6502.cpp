@@ -75,8 +75,13 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
         if (Instruction.Func) {
             OpCodeName = Instruction.OpCodeName;
         }
-        printf("%2X: %9s (%2x) ", Cpu->PC, OpCodeName, OpCode);
-        
+        //printf("%2X: %9s (%2x) ", Cpu->PC, OpCodeName, OpCode);
+        printf("%s(%02x)", OpCodeName, OpCode);
+        for (u8 i = 0; i < Instruction.Bytes; ++i) {
+            printf(" %2x", Ram->Data[Cpu->PC + i + 1]);
+        }
+        printf("       ");
+
         printf(Menu);
         scanf("%127s", Input);
         
