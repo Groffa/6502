@@ -1,6 +1,20 @@
 #ifndef INSTRUCTIONS_IMPL_CPP
 
-INSTRUCT(BRK)
+#define IMPLEMENT(OpCode)  void OpCode##_func(cpu_t *Cpu, ram_t *Ram, u8 *Data)
+
+static void
+CheckAndSetFlags(cpu_t *Cpu)
+{
+    if (Cpu->A == 0) {
+        SET_FLAG(Cpu->SR, StatusFlag_ZERO);
+    }
+    if (Cpu->A & 0x80) {
+        SET_FLAG(Cpu->SR, StatusFlag_NEGATIVE);
+    }
+    // TODO: more tests
+}
+
+IMPLEMENT(BRK)
 {
     // set interrupt flag
     // push pc+2
@@ -10,7 +24,7 @@ INSTRUCT(BRK)
     SET_FLAG(Cpu->SR, StatusFlag_INTERRUPT);
 }
 
-INSTRUCT(ORA_X_ind)
+IMPLEMENT(ORA_X_ind)
 {
     // ORA (oper,X)
     // A OR M -> A
@@ -20,15 +34,37 @@ INSTRUCT(ORA_X_ind)
     Cpu->A |= Ram->Data[Address];
     // Flags: N, Z
     // TODO: if not true, clear flag?
-    if (Cpu->A == 0) {
-        SET_FLAG(Cpu->SR, StatusFlag_ZERO);
+    CheckAndSetFlags(Cpu);
+}
+
+IMPLEMENT(ORA_zpg)
+{
+    // ORA $00
+    u8 Address = Data[0];
+    Cpu->A |= Ram->Data[Address];
+    CheckAndSetFlags(Cpu);
+}
+
+IMPLEMENT(ASL_zpg)
+{
+    // C <- 7 6 5 4 3 2 1 0 <- 0
+    u16 Address = Data[0];
+    if (Ram->Data[Address] & 0x80) {
+        SET_FLAG(Cpu->SR, StatusFlag_CARRY);
+    } else {
+        CLEAR_FLAG(Cpu->SR, StatusFlag_CARRY);
     }
-    if (Cpu->A & 0x80) {
+    Ram->Data[Address] <<= 1;
+    u8 Value = Ram->Data[Address];
+    if (Value & 0x80) {
         SET_FLAG(Cpu->SR, StatusFlag_NEGATIVE);
+    }
+    if (Value == 0) {
+        SET_FLAG(Cpu->SR, StatusFlag_ZERO);
     }
 }
 
-INSTRUCT(PHA)
+IMPLEMENT(PHA)
 {
     // Push accumulator on stack
     PushStack(Cpu, Ram, Cpu->A);

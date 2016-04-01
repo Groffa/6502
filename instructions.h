@@ -3,12 +3,9 @@
 #include <assert.h>
 #include "opcodes.h"
 
-#define INSTR__(OpCode, AdditionalBytes, Cycles, Func) {OpCode,AdditionalBytes,Cycles,Func,#OpCode}
-#define INSTR_(OpCode, AdditionalBytes, Cycles, Func) INSTR__(OpCode,AdditionalBytes,Cycles,Func)
-#define INSTR(OpCode, AdditionalBytes, Cycles)  INSTR_(OpCode,AdditionalBytes,Cycles,OpCode##_func)
-#define IMPLIED(OpCode, Cycles)     INSTR(OpCode, 0, Cycles)
-#define INDIRECT    INSTR
-#define INSTRUCT(Name)  void Name##_func(cpu_t *Cpu, ram_t *Ram, u8 *Data)
+#define OPCODE__(OpCode, AdditionalBytes, Cycles, Func) {OpCode,AdditionalBytes,Cycles,Func,#OpCode}
+#define OPCODE_(OpCode, AdditionalBytes, Cycles, Func) OPCODE__(OpCode,AdditionalBytes,Cycles,Func)
+#define OPCODE(OpCode, AdditionalBytes, Cycles)  OPCODE_(OpCode,AdditionalBytes,Cycles,OpCode##_func)
 
 inline void
 PushStack(cpu_t *Cpu, ram_t *Ram, u8 Value)
@@ -30,9 +27,12 @@ PopStack(cpu_t *Cpu, ram_t *Ram)
 #include "instructions_impl.cpp"
 
 static instruction_t InstructionTable[] = {
-IMPLIED(BRK, 7),
-INDIRECT(ORA_X_ind, 1, 6),
-IMPLIED(PHA, 3),
+    // opcode, additional bytes, cycles
+    OPCODE(BRK, 0, 7),
+    OPCODE(ORA_X_ind, 1, 6),
+    OPCODE(ORA_zpg, 1, 3),
+    OPCODE(ASL_zpg, 1, 5),
+    OPCODE(PHA, 0, 3),
 };
 
 #define INSTRUCTION_COUNT   (sizeof(InstructionTable)/sizeof(InstructionTable[0]))
