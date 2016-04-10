@@ -59,6 +59,7 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
     bool Running = true;
     u16 MemoryDumpStart = 0;
     u8 MemoryDumpCount = 20;
+    bool PrintOpCode = false;   // TODO: turn into menu choice
     while (Running) {
         char Input[128] = {0};
         printf(StatusFlags, MemoryDumpStart, MemoryDumpStart + MemoryDumpCount, GetStatusRegisters(Cpu->SR), Cpu->A, Cpu->X, Cpu->Y, Cpu->PC, Cpu->SP);
@@ -77,7 +78,10 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
             strncpy(OpCodeName, Instruction.OpCodeName, sizeof(OpCodeName));
         }
         //printf("%2X: %9s (%2x) ", Cpu->PC, OpCodeName, OpCode);
-        printf("%s(%02x)", OpCodeName, OpCode);
+        printf("%s", OpCodeName);
+        if (PrintOpCode) {
+            printf("(%2x)", OpCode);
+        }
         for (u8 i = 0; i < Instruction.Bytes; ++i) {
             printf(" %2x", Ram->Data[Cpu->PC + i + 1]);
         }
