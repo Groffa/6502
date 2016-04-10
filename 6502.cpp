@@ -163,7 +163,7 @@ main(int argc, char *argv[])
     cpu_t Cpu = {0};
     ram_t Ram = {0};
 
-    //*
+    /*
     u8 Program[] = {
         ASL_zpg, 0, PHP
     };
@@ -171,8 +171,7 @@ main(int argc, char *argv[])
     u8 ProgramCount = sizeof(Program) / sizeof(Program[0]);
     LoadProgram(&Ram, Program, ProgramCount, 0x10);
     //*/
-    //LoadProgram(&Ram, "rom/atari2600/Vid_olym.bin");
-    // SingleStepProgram(&Cpu, &Ram);
+    // LoadProgram(&Ram, "rom/atari2600/Vid_olym.bin");
     LoadProgram(&Ram, "rom/w2/snake", 0x7000);      // Wasteland 2 Snake program (easter egg)
     Cpu.PC = 0x7000;
     Monitor(&Cpu, &Ram);
