@@ -129,7 +129,7 @@ enum opcode_e
     LDA_abs_X,          // LDA absolute, X
     LDX_abs_Y,          // LDX absolute, Y
 
-    CPY = 0xC0,         // CPY
+    CPY_im = 0xC0,      // CPY immediate
     CMP_X_ind,          // CMP (zeropage, X)
     CPY_zpg = 0xC4,     // CPY zeropage
     CMP_zpg,            // CMP zeropage
