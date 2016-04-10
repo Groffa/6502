@@ -2,10 +2,31 @@
 #include <stdlib.h>
 #include <string.h>
 #include <memory.h>
+#include <math.h>
 #include "6502.h"
 
 // For testing purposes
 #include "opcodes.h"
+
+static u16
+HexStringToInt(char *HexString, u8 HexStringSize = 4)
+{
+    u16 Result = 0;
+    for (u8 HexIndex=0; HexIndex < HexStringSize; ++HexIndex) {
+        char Hex = *(HexString + HexIndex);
+        u8 Value = 0;
+        if (Hex >= '0' && Hex <= '9') {
+            Value = Hex - '0';
+        } else if (Hex >= 'A' && Hex <= 'F') {
+            Value = (Hex - 'A') + 10;
+        } else if (Hex >= 'a' && Hex <= 'f') {
+            Value = (Hex - 'a') + 10;
+        }
+        u16 Position = HexStringSize - HexIndex - 1;
+        Result += pow(16, (float)Position) * Value;
+    }
+    return Result;
+}
 
 static bool
 LoadProgram(ram_t *Ram, const char *Filename, u16 Base = 0)
@@ -111,8 +132,10 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
 
                     case 'g':
                         {
-                            printf("Enter new PC: ");
-                            scanf("%d", &Cpu->PC);
+                            char NewAddress[4] = {0};
+                            printf("Enter new PC in hex (type - to cancel): 0x");
+                            scanf("%4s", NewAddress);
+                            Cpu->PC = HexStringToInt(NewAddress, 4); 
                             break;
                         }
 
