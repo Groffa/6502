@@ -8,7 +8,7 @@
 #include "opcodes.h"
 
 static bool
-LoadProgram(ram_t *Ram, const char *Filename)
+LoadProgram(ram_t *Ram, const char *Filename, u16 Base = 0)
 {
     FILE *File = fopen(Filename, "rb");
     bool Result = false;
@@ -22,7 +22,7 @@ LoadProgram(ram_t *Ram, const char *Filename)
         fclose(File);
         free(Program);
 
-        LoadProgram(Ram, Program, ProgramSize);
+        LoadProgram(Ram, Program, ProgramSize, Base);
     }
     return Result;
 }
@@ -146,6 +146,8 @@ main(int argc, char *argv[])
     //*/
     //LoadProgram(&Ram, "rom/atari2600/Vid_olym.bin");
     // SingleStepProgram(&Cpu, &Ram);
+    LoadProgram(&Ram, "rom/w2/snake", 0x7000);      // Wasteland 2 Snake program (easter egg)
+    Cpu.PC = 0x7000;
     Monitor(&Cpu, &Ram);
 
     printf("Program ran for %i cycles.\n", Cpu.CycleCount);
