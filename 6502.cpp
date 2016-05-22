@@ -81,6 +81,7 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
     u16 MemoryDumpStart = 0;
     u8 MemoryDumpCount = 20;
     bool PrintOpCode = false;   // TODO: turn into menu choice
+    cpu_t OriginalCpuState = *Cpu;
     while (Running) {
         char Input[128] = {0};
         printf(StatusFlags, MemoryDumpStart, MemoryDumpStart + MemoryDumpCount, GetStatusRegisters(Cpu->SR), Cpu->A, Cpu->X, Cpu->Y, Cpu->PC, Cpu->SP);
@@ -115,7 +116,8 @@ Monitor(cpu_t *Cpu, ram_t *Ram)
             for (char *CurrentInput = Input; *CurrentInput; ++CurrentInput) {
                 switch (*CurrentInput) {
                     case 'r':
-                        memset(Cpu, 0, sizeof(cpu_t));
+                        //memset(Cpu, 0, sizeof(cpu_t));
+                        *Cpu = OriginalCpuState;
                         break;
 
                     case 'q':
