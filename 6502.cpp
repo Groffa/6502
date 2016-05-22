@@ -174,8 +174,11 @@ main(int argc, char *argv[])
     LoadProgram(&Ram, Program, ProgramCount, 0x10);
     //*/
     // LoadProgram(&Ram, "rom/atari2600/Vid_olym.bin");
-    LoadProgram(&Ram, "rom/w2/snake", 0x7000);      // Wasteland 2 Snake program (easter egg)
+    
+    const char *ROMName = "rom/w2/snake";
+    LoadProgram(&Ram, ROMName, 0x7000);      // Wasteland 2 Snake program (easter egg)
     Cpu.PC = 0x7000;
+    printf("Loaded ROM %s at 0x%x.\n", ROMName, Cpu.PC);
     Monitor(&Cpu, &Ram);
 
     printf("Program ran for %i cycles.\n", Cpu.CycleCount);
