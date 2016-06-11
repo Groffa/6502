@@ -23,7 +23,7 @@ HexStringToInt(char *HexString, u8 HexStringSize = 4)
             Value = (Hex - 'a') + 10;
         }
         u16 Position = HexStringSize - HexIndex - 1;
-        Result += pow(16, (float)Position) * Value;
+        Result += (u16)pow(16, (float)Position) * Value;
     }
     return Result;
 }
